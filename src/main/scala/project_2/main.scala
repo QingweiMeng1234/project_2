@@ -3,10 +3,19 @@ package project_2
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.rdd._
+import org.apache.log4j.{Level, Logger}
+import org.apache.spark.SparkContext._
+import org.apache.spark.rdd.PairRDDFunctions
 
 
 object main{
 
+  val rootLogger = Logger.getRootLogger()
+  rootLogger.setLevel(Level.ERROR)
+
+  Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
+  Logger.getLogger("org.spark-project").setLevel(Level.WARN)
+  Logger.getLogger("org").setLevel(Level.FATAL)
   val seed = new java.util.Date().hashCode;
   val rand = new scala.util.Random(seed);
 
@@ -63,27 +72,27 @@ object main{
     }
   }
 
-  class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: Int) extends Serializable {
-/* A constructor that requies intialize the bucket and the z value. The bucket size is the bucket size of the sketch. */
-
-    var bucket: Set[(String, Int)] = bucket_in
-    var z: Int = z_in
-
-    val BJKST_bucket_size = bucket_size_in;
-
-    def this(s: String, z_of_s: Int, bucket_size_in: Int){
-      /* A constructor that allows you pass in a single string, zeroes of the string, and the bucket size to initialize the sketch */
-      this(Set((s, z_of_s )) , z_of_s, bucket_size_in)
-    }
-
-    def +(that: BJKSTSketch): BJKSTSketch = {    /* Merging two sketches */
-
-    }
-
-    def add_string(s: String, z_of_s: Int): BJKSTSketch = {   /* add a string to the sketch */
-
-    }
-  }
+//  class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: Int) extends Serializable {
+///* A constructor that requies intialize the bucket and the z value. The bucket size is the bucket size of the sketch. */
+//
+//    var bucket: Set[(String, Int)] = bucket_in
+//    var z: Int = z_in
+//
+//    val BJKST_bucket_size = bucket_size_in;
+//
+//    def this(s: String, z_of_s: Int, bucket_size_in: Int){
+//      /* A constructor that allows you pass in a single string, zeroes of the string, and the bucket size to initialize the sketch */
+//      this(Set((s, z_of_s )) , z_of_s, bucket_size_in)
+//    }
+//
+//    def +(that: BJKSTSketch): BJKSTSketch = {    /* Merging two sketches */
+//
+//    }
+//
+//    def add_string(s: String, z_of_s: Int): BJKSTSketch = {   /* add a string to the sketch */
+//
+//    }
+//  }
 
 
   def tidemark(x: RDD[String], trials: Int): Double = {
@@ -100,12 +109,12 @@ object main{
 
 
   def BJKST(x: RDD[String], width: Int, trials: Int) : Double = {
-
+  return 0
   }
 
 
   def Tug_of_War(x: RDD[String], width: Int, depth:Int) : Long = {
-
+  return 0
   }
 
 
@@ -116,7 +125,7 @@ object main{
 
 
   def exact_F2(x: RDD[String]) : Long = {
-
+    return x.map(x => (x, 1)).reduceByKey((v1,v2)=>v1*v1+v2*v2).map(a=>a._2).sum().round
   }
 
 
