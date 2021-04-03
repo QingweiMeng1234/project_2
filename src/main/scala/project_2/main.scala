@@ -122,7 +122,6 @@ object main{
   def BJKST(x: RDD[String], width: Int, trials: Int) : Double = {
     val h = Seq.fill(trials)(new hash_function(2000000000))
     def param0 = (accu1: Seq[Int],accu2:Seq[Int])=>Seq.range(0,trials).map(i=>.+(i))
-    val x3 = x.aggregate(Seq.fill(trials)(0))(+,add_string)
   }
 
 
