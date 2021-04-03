@@ -126,9 +126,21 @@ object main{
   }
 
 
-  def Tug_of_War(x: RDD[String], width: Int, depth:Int) : Long = {
-  return 0
-  }
+ def Tug_of_War(x: RDD[String], width: Int, depth:Int) : Long = {
+  val t_o_w_sketches = Seq.fill(width * depth)(t_o_w(x))
+  val avgs = t_o_w_sketches.grouped(width).map(_.sum/width).toArray //average
+  val median = avgs.sortWith(_ < _).drop(avgs.length/2).head
+
+  return median
+ }
+
+
+def t_o_w(x: RDD[String]): Long = {
+  var n: Long = 0
+  val h: four_universal_Radamacher_hash_function = new four_universal_Radamacher_hash_function()
+  n = x.map(x => h.hash(x)).reduce(_+_)
+  return n*n
+}
 
 
   def exact_F0(x: RDD[String]) : Long = {
