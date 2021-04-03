@@ -1,6 +1,6 @@
 # Large Scale Data Processing: Project 2
-## Getting started
-Head to [Project 1](https://github.com/CSCI3390/project_1) if you're looking for information on Git, template repositories, or setting up your local/remote environments.
+## Jessica Fong Ng & Qingwei Meng
+Project 2 report of Large Scale Data Processing class at Boston College. The code had been modify from [project 2 assignment description] (https://github.com/CSCI3390/project_2).
 
 ## Resilient distributed datasets in Spark
 This project will familiarize you with RDD manipulations by implementing some of the sketching algorithms the course has covered thus far.  
@@ -23,17 +23,31 @@ You'll be submitting a report along with your code that provides commentary on t
 3. **(3 points)** Implement the `BJKST` function. The function accepts an RDD of strings, a parameter `width`, and a parameter `trials` as inputs. `width` denotes the maximum bucket size of each sketch. The function should run `trials` sketches and return the median of the estimates of the sketches. A template of the `BJKSTSketch` class is also included in the sample code. You are welcome to finish its methods and apply that class or write your own class from scratch. A 2-universal hash function class `hash_function(numBuckets_in: Long)` has also been provided and will hash a string to an integer in the range `[0, numBuckets_in - 1]`. Once you've implemented the function, determine the smallest `width` required in order to achieve an error of +/- 20% on your estimate. Keeping `width` at that value, set `depth` to 5. Run `BJKST` locally **and** on GCP with 1 driver and 4 machines having 2 x N1 cores. Copy the results to your report. Terminate the program if it runs for longer than 30 minutes.
 4. **(1 point)** Compare the BJKST algorithm to the exact F0 algorithm and the tug-of-war algorithm to the exact F2 algorithm. Summarize your findings.
 
-## Submission via GitHub
-Delete your project's current **README.md** file (the one you're reading right now) and include your report as a new **README.md** file in the project root directory. Have no fear—the README with the project description is always available for reading in the template repository you created your repository from. For more information on READMEs, feel free to visit [this page](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/about-readmes) in the GitHub Docs. You'll be writing in [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown). Be sure that your repository is up to date and you have pushed all changes you've made to the project's code. When you're ready to submit, simply provide the link to your repository in the Canvas assignment's submission.
+## Report Finding
+### Compute Exact F2
+```
+  def exact_F2(x: RDD[String]) : Long = {
+    return x.map(x => (x, 1)).reduceByKey((v1,v2)=>v1*v1+v2*v2).map(a=>a._2).sum().round
+  }
+```
+### Implement Tug-of-War Algorithm
+```
+ def Tug_of_War(x: RDD[String], width: Int, depth:Int) : Long = {
+  val t_o_w_sketches = Seq.fill(width * depth)(t_o_w(x))
+  val avgs = t_o_w_sketches.grouped(width).map(_.sum/width).toArray //average
+  val median = avgs.sortWith(_ < _).drop(avgs.length/2).head
 
-## You must do the following to receive full credit:
-1. Create your report in the ``README.md`` and push it to your repo.
-2. In the report, you must include your (and your partner's) full name in addition to any collaborators.
-3. Submit a link to your repo in the Canvas assignment.
+  return median
+ }
 
-## Late submission penalties
-Beginning with the minute after the deadline, your submission will be docked a full letter grade (10%) for every 
-day that it is late. For example, if the assignment is due at 11:59 PM EST on Friday and you submit at 3:00 AM EST on Sunday,
-then you will be docked 20% and the maximum grade you could receive on that assignment is an 80%. 
-Late penalties are calculated from the last commit in the Git log.
-**If you make a commit more than 48 hours after the deadline, you will receive a 0.**
+
+def t_o_w(x: RDD[String]): Long = {
+  var n: Long = 0
+  val h: four_universal_Radamacher_hash_function = new four_universal_Radamacher_hash_function()
+  n = x.map(x => h.hash(x)).reduce(_+_)
+  return n*n
+}
+```
+### Implement BJKST
+
+### Result
