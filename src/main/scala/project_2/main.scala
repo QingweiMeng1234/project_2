@@ -4,9 +4,11 @@ import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.rdd._
 import org.apache.log4j.{Level, Logger}
+import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.SparkContext._
-import org.apache.spark.rdd.PairRDDFunctions
 
+import scala.collection.mutable.MutableList
+import scala.collection.mutable.ListBuffer
 
 object main{
 
@@ -18,6 +20,7 @@ object main{
   Logger.getLogger("org").setLevel(Level.FATAL)
   val seed = new java.util.Date().hashCode;
   val rand = new scala.util.Random(seed);
+
 
   class hash_function(numBuckets_in: Long) extends Serializable {  // a 2-universal hash family, numBuckets_in is the numer of buckets
     val p: Long = 2147483587;  // p is a prime around 2^31 so the computation will fit into 2^63 (Long)
@@ -72,34 +75,42 @@ object main{
     }
   }
 
-//  class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: Int) extends Serializable {
-///* A constructor that requies intialize the bucket and the z value. The bucket size is the bucket size of the sketch. */
-//
-//    var bucket: Set[(String, Int)] = bucket_in
-//    var z: Int = z_in
-//
-//    val BJKST_bucket_size = bucket_size_in;
-//
-//    def this(s: String, z_of_s: Int, bucket_size_in: Int){
-//      /* A constructor that allows you pass in a single string, zeroes of the string, and the bucket size to initialize the sketch */
-//      this(Set((s, z_of_s )) , z_of_s, bucket_size_in)
-//    }
-//
-//    def +(that: BJKSTSketch): BJKSTSketch = {    /* Merging two sketches */
-//
-//    }
-//
-//    def add_string(s: String, z_of_s: Int): BJKSTSketch = {   /* add a string to the sketch */
-//
-//    }
-//  }
+  class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: Int) extends Serializable {
+/* A constructor that requires initialize the bucket and the z value. The bucket size is the bucket size of the sketch. */
+    val c = 32 // constant
+    val epsilon = c/bucket_size_in
+    var bucket: Set[(String, Int)] = bucket_in
+    var z: Int = z_in
+
+    val BJKST_bucket_size = bucket_size_in;
+
+    def this(s: String, z_of_s: Int, bucket_size_in: Int){
+      /* A constructor that allows you pass in a single string, zeroes of the string, and the bucket size to initialize the sketch */
+      this(Set((s, z_of_s )) , z_of_s, bucket_size_in)
+    }
+
+    def +(that: BJKSTSketch): BJKSTSketch = {    /* Merging two sketches */
+      var merge_B = this.bucket_in.union(that.bucket_in)
+      var merge_z = math.min(this.bucket_size_in,that.bucket_size_in)
+      while(merge_B.size>= 2/epsilon){
+        merge_z += 1
+        merge_B = merge_B.filterNot(s=> s._2<merge_z)
+      }
+      return new BJKSTSketch(merge_B,merge_z,this.bucket_size_in)
+    }
+
+    def add_string(s: String, z_of_s: Int): BJKSTSketch = {   /* add a string to the sketch */
+      val new_ele = new BJKSTSketch(s,z_of_s,this.bucket_size_in)
+      return this.+(new_ele)
+    }
+  }
 
 
   def tidemark(x: RDD[String], trials: Int): Double = {
     val h = Seq.fill(trials)(new hash_function(2000000000))
 
     def param0 = (accu1: Seq[Int], accu2: Seq[Int]) => Seq.range(0,trials).map(i => scala.math.max(accu1(i), accu2(i)))
-    def param1 = (accu1: Seq[Int], s: String) => Seq.range(0,trials).map( i =>  scala.math.max(accu1(i), h(i).zeroes(h(i).hash(s))) )
+    def param1 = (accu1: Seq[Int], s: String) => Seq.range(0,trials).map( i =>  scala.math.max(accu1(i), h(i).zeroes(h(i).hash(s))) ) // count # of 0's
 
     val x3 = x.aggregate(Seq.fill(trials)(0))( param1, param0)
     val ans = x3.map(z => scala.math.pow(2,0.5 + z)).sortWith(_ < _)( trials/2) /* Take the median of the trials */
@@ -109,7 +120,9 @@ object main{
 
 
   def BJKST(x: RDD[String], width: Int, trials: Int) : Double = {
-  return 0
+    val h = Seq.fill(trials)(new hash_function(2000000000))
+    def param0 = (accu1: Seq[Int],accu2:Seq[Int])=>Seq.range(0,trials).map(i=>.+(i))
+    val x3 = x.aggregate(Seq.fill(trials)(0))(+,add_string)
   }
 
 
