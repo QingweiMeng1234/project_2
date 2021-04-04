@@ -149,7 +149,7 @@ def t_o_w(x: RDD[String]): Long = {
 
 
   def exact_F2(x: RDD[String]) : Long = {
-    return x.map(x => (x, 1)).reduceByKey(_+_).map(a=>a._2*a._2).sum.round
+    return x.map(x => (x, 1.asInstanceOf[Long])).reduceByKey(_+_).map(a=>a._2*a._2).sum
   }
 
 
