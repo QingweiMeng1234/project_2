@@ -40,8 +40,8 @@ filename.csv function inputs
 ## Report Finding
 ### Compute Exact F2
 ```
-  def exact_F2(x: RDD[String]) : Long = {
-    return x.map(x => (x, 1)).reduceByKey((v1,v2)=>v1*v1+v2*v2).map(a=>a._2).sum().round
+def exact_F2(x: RDD[String]) : Long = {
+    return x.map(x => (x, 1)).reduceByKey(_+_).map(a=>a._2*a._2).sum.round
   }
 ```
 ### Implement Tug-of-War Algorithm
