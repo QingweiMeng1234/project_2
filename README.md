@@ -134,6 +134,6 @@ F0 | 66 | 7406649
 BJKST | 59 | 7340032
 
 #### Summary
-1. `BJKST` and `Tug-of-War` algorithms can estimate F0 and F2 well. <br \>
+1. `BJKST` and `Tug-of-War` algorithms can estimate F0 and F2 well.
 2. The running time of `BJKST` is slightly faster than estimating F0 directly, while `Tug-of-War` is much slower than estimating F2 directly.
   
