@@ -121,7 +121,7 @@ Platform |Width|Depth| time |  estimation
 ---------|-----|-----|------|------------
 Local| 50 |5 | 0 | 9728
 GCP | 50 | 5 | 66 | 7406649
-### 4. Compare the Results
+### 4. Comparing the Results
 #### Exact F2 v Tug-of-War Sketch
  algorithm| time |  estimation 
 ------------|------------|------------
