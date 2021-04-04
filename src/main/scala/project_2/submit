@@ -4,7 +4,7 @@ sbt -Dsbt.log.noformat = true  clean package
 
 
 
->spark-submit --class project_2.main --master local[*] target\scala-2.12\project_2_2.12-1.0.jar test.csv
+>
    tidemark 100
 
 
