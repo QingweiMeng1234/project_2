@@ -55,5 +55,5 @@ def t_o_w(x: RDD[String]): Long = {
  algorithm| time |  estimation 
 ------------|------------|------------
 F2 | x | x
-Tug-of-War | x | x
+Tug-of-War | 465 | 7109545222
 The run time is not significantly different becasue the memory bottleneck has not reached. 
