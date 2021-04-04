@@ -94,7 +94,7 @@ class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: In
   }
   ``` 
 #### Smallest Width Determination 
-We set the failure probability equals 5 percent and use 100 trials of BJKST algorithm with `depth` 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the BJKST algorithm in `main`as following: 
+We set the failure probability equals 5 percent and use 100 runs of BJKST algorithm with `depth` 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the BJKST algorithm in `main`as following: 
   ```
     if(args(1)=="BJKST") {
       if (args.length != 5) {
@@ -115,7 +115,7 @@ We set the failure probability equals 5 percent and use 100 trials of BJKST algo
       val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
       println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
   ```     
-We used binary search to estimate `k`. The smallest `k` that we can achieve 95 success is 50.
+We used binary search to estimate `k`. The smallest `k` that we can achieve 95 successes is 50.
 #### Result
 Platform |Width|Depth| time |  estimation 
 ---------|-----|-----|------|------------
@@ -134,6 +134,6 @@ F0 | 66 | 7406649
 BJKST | 59 | 7340032
 
 #### Summary
-1. `BJKST` and `Tug-of-War` algorithms can estimate F0 and F2 well <br \>
+1. `BJKST` and `Tug-of-War` algorithms can estimate F0 and F2 well. <br \>
 2. The running time of `BJKST` is slightly faster than estimating F0 directly, while `Tug-of-War` is much slower than estimating F2 directly.
   
