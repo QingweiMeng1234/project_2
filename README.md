@@ -11,7 +11,7 @@ def exact_F2(x: RDD[String]) : Long = {
   }
 ```
 #### Result
-Platform | time |  estimation 
+Platform | Time |  Estimation 
 ------------|------------|------------
 Local | 0 | 16904
 GCP | 74 | 8567966130
@@ -34,7 +34,7 @@ def t_o_w(x: RDD[String]): Long = {
 }
 ```
 #### Result
-Platform |Width|Depth| time |  estimation 
+Platform |Width|Depth| Time |  Estimation 
 ---------|-----|-----|------|------------
 Local| 10 | 3| 2 | 13946
 GCP | 10 | 3 | 276 | 6838827645
@@ -117,7 +117,7 @@ We set the failure probability equals 5 percent and use 100 runs of BJKST algori
   ```     
 We used binary search to estimate width. The smallest width that we can achieve 95 successes is 50.
 #### Result
-Platform |Width|Depth| time |  estimation 
+Platform |Width|Depth| Time |  Estimation 
 ---------|-----|-----|------|------------
 Local| 50 |5 | 0 | 9728
 GCP | 50 | 5 | 66 | 7406649
@@ -128,7 +128,7 @@ GCP | 50 | 5 | 66 | 7406649
 F2 | 41 | 8567966130
 Tug-of-War | 276 | 6838827645
 #### Exact F0 v BJKST Sketch
- algorithm| time |  estimation 
+ algorithm| Time |  Estimation 
 ------------|------------|------------
 F0 | 66 | 7406649
 BJKST | 59 | 7340032
