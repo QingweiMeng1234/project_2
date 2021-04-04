@@ -94,7 +94,7 @@ class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: In
   }
   ``` 
 #### Smallest Width Determination 
-We set the failure probability equals 5 percent and use 100 runs of BJKST algorithm with `depth` 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the BJKST algorithm in `main`as following: 
+If the estimate of `BJKST` is between +\- 20% of `exact_F2` , we count it as a success. We set the failure probability equals 5 percent and `depth` equals 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the BJKST algorithm in `main`as following: 
   ```
     if(args(1)=="BJKST") {
       if (args.length != 5) {
@@ -115,7 +115,7 @@ We set the failure probability equals 5 percent and use 100 runs of BJKST algori
       val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
       println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
   ```     
-We used binary search to estimate width. The smallest width that we can achieve 95 successes is 50.
+We used binary search in command line to estimate width. The smallest width that we can achieve 95 successes is 50.
 #### Result
 Platform |Width|Depth| Time |  Estimation 
 ---------|-----|-----|------|------------
