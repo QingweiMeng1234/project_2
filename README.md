@@ -1,6 +1,6 @@
 # Large Scale Data Processing: Project 2
 ## Jessica Fong Ng & Qingwei Meng
-Project 2 report of Large Scale Data Processing class at Boston College. The code had been modify from [project 2 assignment description] (https://github.com/CSCI3390/project_2).
+Project 2 report of Large Scale Data Processing class at Boston College. The code had been modify from [project 2 assignment description](https://github.com/CSCI3390/project_2).
 
 ## Resilient distributed datasets in Spark
 This project will familiarize you with RDD manipulations by implementing some of the sketching algorithms the course has covered thus far.  
