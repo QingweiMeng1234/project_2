@@ -51,3 +51,9 @@ def t_o_w(x: RDD[String]): Long = {
 ### Implement BJKST
 
 ### Result
+#### Exact F2 v Tug-of-War Sketch
+|time (s) | estimation 
+---------|---------|---------
+F2 | xxxx | xxx
+Tug-of-War| xxx| xxx
+The run time is not significantly different becasue the memory bottleneck has not reached. 
