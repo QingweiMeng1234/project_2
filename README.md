@@ -115,7 +115,7 @@ We set the failure probability equals 5 percent and use 100 runs of BJKST algori
       val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
       println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
   ```     
-We used binary search to estimate `k`. The smallest `k` that we can achieve 95 successes is 50.
+We used binary search to estimate width. The smallest width that we can achieve 95 successes is 50.
 #### Result
 Platform |Width|Depth| time |  estimation 
 ---------|-----|-----|------|------------
