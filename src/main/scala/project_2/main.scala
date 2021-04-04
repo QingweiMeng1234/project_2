@@ -90,17 +90,17 @@ object main{
     }
 
     def +(that: BJKSTSketch): BJKSTSketch = {    /* Merging two sketches */
-      var merge_B = this.bucket_in.union(that.bucket_in)
-      var merge_z = math.min(this.bucket_size_in,that.bucket_size_in)
+      var merge_B = this.bucket.union(that.bucket)
+      var merge_z = math.min(this.BJKST_bucket_size,that.BJKST_bucket_size)
       while(merge_B.size>= 2/epsilon){
         merge_z += 1
         merge_B = merge_B.filterNot(s=> s._2<merge_z)
       }
-      return new BJKSTSketch(merge_B,merge_z,this.bucket_size_in)
+      return new BJKSTSketch(merge_B,merge_z,this.BJKST_bucket_size)
     }
 
     def add_string(s: String, z_of_s: Int): BJKSTSketch = {   /* add a string to the sketch */
-      val new_ele = new BJKSTSketch(s,z_of_s,this.bucket_size_in)
+      val new_ele = new BJKSTSketch(s,z_of_s,this.BJKST_bucket_size)
       return this.+(new_ele)
     }
   }
@@ -121,7 +121,7 @@ object main{
 
   def BJKST(x: RDD[String], width: Int, trials: Int) : Double = {
     val h = Seq.fill(trials)(new hash_function(2000000000))
-    def param0 = (accu1: Seq[Int],accu2:Seq[Int])=>Seq.range(0,trials).map(i=>.+(i))
+    return 0
   }
 
 
