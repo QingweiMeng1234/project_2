@@ -4,15 +4,18 @@ Project 2 report of Large Scale Data Processing class at Boston College. The cod
 
 ## Report Findings
 We use a local test file with 10000 data.
-### 1. Implement the `exact_F2` function. Run `exact_F2` locally **and** on GCP with 1 driver and 4 machines having 2 x N1 cores. Copy the results to your report.
+### 1. `Exact_F2` Implementation.
 ```
 def exact_F2(x: RDD[String]) : Long = {
     return x.map(x => (x, 1.asInstanceOf[Long])).reduceByKey(_+_).map(a=>a._2*a._2).sum
   }
 ```
-Local Result: Time Elapsed: 0s. Estimate: 16904 <br />
-GCP Result: Time Elapsed: 74s, Estimate: 8567966130
-### 2. Implement the `Tug_of_War` function. Run `Tug_of_War` locally **and** on GCP with 1 driver and 4 machines having 2 x N1 cores. Copy the results to your report.
+#### Result
+Platform | time |  estimation 
+------------|------------|------------
+Local | 0 | 16904
+GCP | 74 | 8567966130
+### 2. `Tug_of_War` Implementation.
 ```
  def Tug_of_War(x: RDD[String], width: Int, depth:Int) : Long = {
   val t_o_w_sketches = Seq.fill(width * depth)(t_o_w(x))
@@ -30,9 +33,14 @@ def t_o_w(x: RDD[String]): Long = {
   return n*n
 }
 ```
-Local Result: Width: 10. Depth: 3. Time Elapsed: 2s. Estimate: 13946 <br />
-GCP Result: Width: 10, Depth: 3, Time Elapsed: 276s. Estimate: 6838827645
-### 3. Implement the `BJKST` function. Once you've implemented the function, determine the smallest `width` required in order to achieve an error of +/- 20% on your estimate. Run `BJKST` locally **and** on GCP with 1 driver and 4 machines having 2 x N1 cores. Copy the results to your report.
+#### Result
+Platform |Width|Depth| time |  estimation 
+---------|-----|-----|------|------------
+Local| 10 | 3| 2 | 13946
+GCP | 10 | 3 | 276 | 6838827645
+### 3. 
+#### `BJKST` Implementation
+
 ```
 class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: Int) extends Serializable {
 /* A constructor that requires initialize the bucket and the z value. The bucket size is the bucket size of the sketch. */
@@ -71,7 +79,7 @@ class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: In
       return this
   }
 }
-
+ 
 
   def BJKST(x: RDD[String], width: Int, trials: Int) : Double = {
        val h = Seq.fill(trials)(new hash_function(2000000000))
@@ -84,44 +92,48 @@ class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: In
     return ans
 
   }
-```
-### 4. **(1 point)** Compare the BJKST algorithm to the exact F0 algorithm and the tug-of-war algorithm to the exact F2 algorithm. Summarize your findings.
+  ``` 
+#### Smallest Width Determination 
+We set the failure probability equals 5 percent and use 100 trials of BJKST algorithm with `depth` 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the main function of BJKST algorithm as following: 
+  ```
+    if(args(1)=="BJKST") {
+      if (args.length != 5) {
+        println("Usage: project_2 input_path BJKST #buckets trials number_rounds")
+        sys.exit(1)
+      }
 
+      var count = 0
+      val target = exact_F0(dfrdd)
+      for(i <- 1 to args(4).toInt) {
+        val ans = BJKST(dfrdd, args(2).toInt, args(3).toInt)
+        if (ans < 1.2 * target && ans > 0.8 * target) {
+          count += 1
+        }
+      }
 
-
-## Report Finding
-### Compute Exact F2
-```
-def exact_F2(x: RDD[String]) : Long = {
-    return x.map(x => (x, 1.asInstanceOf[Long])).reduceByKey(_+_).map(a=>a._2*a._2).sum
-  }
-```
-### Implement Tug-of-War Algorithm
-```
- def Tug_of_War(x: RDD[String], width: Int, depth:Int) : Long = {
-  val t_o_w_sketches = Seq.fill(width * depth)(t_o_w(x))
-  val avgs = t_o_w_sketches.grouped(width).map(_.sum/width).toArray //average
-  val median = avgs.sortWith(_ < _).drop(avgs.length/2).head
-
-  return median
- }
-
-
-def t_o_w(x: RDD[String]): Long = {
-  var n: Long = 0
-  val h: four_universal_Radamacher_hash_function = new four_universal_Radamacher_hash_function()
-  n = x.map(x => h.hash(x)).reduce(_+_)
-  return n*n
-}
-```
-### Implement BJKST
-
-### Result
+      val endTimeMillis = System.currentTimeMillis()
+      val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
+      println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
+  ```     
+We used binary search to estimate `k`. The smallest `k` that we can achieve 95 success is 50.
+#### Result
+Platform |Width|Depth| time |  estimation 
+---------|-----|-----|------|------------
+Local| 50 |5 | 0 | 9728
+GCP | 50 | 5 | 66 | 7406649
+### 4. Compare the Results
 #### Exact F2 v Tug-of-War Sketch
  algorithm| time |  estimation 
 ------------|------------|------------
 F2 | 41 | 8567966130
 Tug-of-War | 276 | 6838827645
+#### Exact F0 v BJKST Sketch
+ algorithm| time |  estimation 
+------------|------------|------------
+F0 | 66 | 7406649
+BJKST | 59 | 7340032
 
-
-The run time is not significantly different becasue the memory bottleneck has not reached. 
+#### Summary
+1. `BJKST` and `Tug-of-War` algorithms can estimate F0 and F2 well <br \>
+2. The running time of `BJKST` is slightly faster than estimating F0 directly, while `Tug-of-War` is much slower than estimating F2 directly.
+  
