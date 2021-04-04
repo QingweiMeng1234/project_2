@@ -70,4 +70,6 @@ def t_o_w(x: RDD[String]): Long = {
 ------------|------------|------------
 F2 | 41 | 4272998834
 Tug-of-War | 465 | 7109545222
+
+
 The run time is not significantly different becasue the memory bottleneck has not reached. 
