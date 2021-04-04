@@ -94,7 +94,7 @@ class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: In
   }
   ``` 
 #### Smallest Width Determination 
-We set the failure probability equals 5 percent and use 100 trials of BJKST algorithm with `depth` 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the main function of BJKST algorithm as following: 
+We set the failure probability equals 5 percent and use 100 trials of BJKST algorithm with `depth` 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the BJKST algorithm in `main`as following: 
   ```
     if(args(1)=="BJKST") {
       if (args.length != 5) {
