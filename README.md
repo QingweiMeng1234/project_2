@@ -68,6 +68,6 @@ def t_o_w(x: RDD[String]): Long = {
 #### Exact F2 v Tug-of-War Sketch
  algorithm| time |  estimation 
 ------------|------------|------------
-F2 | x | x
+F2 | 41 | 4272998834
 Tug-of-War | 465 | 7109545222
 The run time is not significantly different becasue the memory bottleneck has not reached. 
