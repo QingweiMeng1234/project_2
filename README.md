@@ -141,7 +141,8 @@ GCP | 50 | 5 | 66 | 7406649
  algorithm| time |  estimation 
 ------------|------------|------------
 F2 | 41 | 8567966130
-Tug-of-War | 276 | 6838827645
+(serial)Tug-of-War | 276 | 6838827645
+(parallel)Tug-of-War | 38 | 8551644765 
 #### Exact F0 v BJKST Sketch
  algorithm| Time |  Estimation 
 ------------|------------|------------
