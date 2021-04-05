@@ -98,7 +98,7 @@ If the estimate of `BJKST` is between +/- 20% of `exact_F2` , we count it as a s
   ```
     if(args(1)=="BJKST") {
       if (args.length != 5) {
-        println("Usage: project_2 input_path BJKST #buckets trials number_rounds")
+        println("Usage: project_2 input_path BJKST #buckets trials number_rounds") /* number_rounds = 100 */
         sys.exit(1)
       }
 
