@@ -27,7 +27,7 @@ def exact_F2(x: RDD[String]) : Long = {
 #### Result
 Platform | Time |  Estimation 
 ------------|------------|------------
-Local | 95 | 8567966130
+Local | 42 | 8567966130
 GCP | 74 | 8567966130
 ### 2. `Tug_of_War` Implementation.
 This is a serial implementation.
@@ -65,7 +65,7 @@ Algorithm | Platform |Width|Depth| Time |  Estimation
 serial| Local| 10 | 3| 275 | 7109545222
 serial| GCP | 10 | 3 | 276 | 6838827645
 parallelize| Local | 10| 3 | 38| 8551644765 
-parallelize| GCP | 10| 3 | x| x 
+parallelize| GCP | 10| 3 | 119| 6680142006 
 
 ### 3. 
 #### `BJKST` Implementation
@@ -156,7 +156,7 @@ These results are comparing the local run time and result.
 #### Exact F2 v Tug-of-War Sketch
  algorithm| time |  estimation 
 ------------|------------|------------
-F2 | 41 | 8567966130
+F2 | 42 | 8567966130
 (serial)Tug-of-War | 275 | 7109545222
 (parallel)Tug-of-War | 38 | 8551644765 
 #### Exact F0 v BJKST Sketch
