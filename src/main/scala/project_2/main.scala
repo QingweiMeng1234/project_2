@@ -125,6 +125,16 @@ object main{
     return ans
 
   }
+	
+def binary_BJKST(x: RDD[String], width_up: Int,width_below:Int, trials: Int,target:Long):Int ={
+    val result = BJKST(x,(width_up+width_below)/2,trials)
+    if(width_below+1>= (width_up+width_below)/2) return (width_up+width_below)/2
+
+    // if condition meets, decrease buckets
+    if(result<1.2*target && result>0.8*target)  binary_BJKST(x,(width_up+width_below)/2,width_below, trials,target)
+    // if not, increase buckets
+    else binary_BJKST(x,width_up,(width_up+width_below)/2, trials,target)
+  }
 
   def tidemark(x: RDD[String], trials: Int): Double = {
     val h = Seq.fill(trials)(new hash_function(2000000000))
@@ -197,28 +207,22 @@ return ans
 
     val startTimeMillis = System.currentTimeMillis()
 
+
     if(args(1)=="BJKST") {
       if (args.length != 4) {
         println("Usage: project_2 input_path BJKST #buckets trials")
         sys.exit(1)
       }
-      /* count# sucess
-      var count = 0
-      val target = exact_F0(dfrdd)
-      for(i <- 1 to args(4).toInt) {
-        val ans = BJKST(dfrdd, args(2).toInt, args(3).toInt)
-        if (ans < 1.2 * target && ans > 0.8 * target) {
-        count += 1
-      }
-      */
+   
       val ans = BJKST(dfrdd, args(2).toInt, args(3).toInt)
 
       val endTimeMillis = System.currentTimeMillis()
       val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
-
+//       val target = exact_F0(dfrdd)
+//       val min_bucket = binary_BJKST(dfrdd,args(2).toInt,0,args(3).toInt,target)
       println("==================================")
       println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Estimate: "+ans )
-      //println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
+//    println("BJKST Algorithm. Min Bucket Size:"+ min_bucket + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds)
       println("==================================")
 	      
 	      
