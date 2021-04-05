@@ -123,34 +123,39 @@ class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: In
   }
   ``` 
 #### Smallest Width Determination 
-If the estimate of `BJKST` is between +/- 20% of `exact_F0` , we count it as a success. We set the failure probability equals 5 percent and `depth` equals 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the BJKST algorithm in `main`as following: 
+According to the slides in class, we started with 600 (24/(0.2)^2). Then we used a binary search to find the minimum buckets and modified the main function and .
   ```
-    if(args(1)=="BJKST") {
-      if (args.length != 5) {
-        println("Usage: project_2 input_path BJKST #buckets trials number_rounds") /* number_rounds = 100 */
+   def binary_BJKST(x: RDD[String], width_up: Int,width_below:Int, trials: Int,target:Long):Int ={
+    val result = BJKST(x,(width_up+width_below)/2,trials)
+    if(width_below+1>= (width_up+width_below)/2) return (width_up+width_below)/2
+
+    // if condition meets, decrease buckets
+    if(result<1.2*target && result>0.8*target)  binary_BJKST(x,(width_up+width_below)/2,width_below, trials,target)
+    // if not, increase buckets
+    else binary_BJKST(x,width_up,(width_up+width_below)/2, trials,target)
+  }
+  ```     
+  ```  
+  if(args(1)=="BJKST") {
+      if (args.length != 4) {
+        println("Usage: project_2 input_path BJKST #buckets trials")
         sys.exit(1)
       }
-
-      var count = 0
       val target = exact_F0(dfrdd)
-      for(i <- 1 to args(4).toInt) {
-        val ans = BJKST(dfrdd, args(2).toInt, args(3).toInt)
-        if (ans < 1.2 * target && ans > 0.8 * target) {
-          count += 1
-        }
-      }
-
+      val min_bucket = binary_BJKST(dfrdd,args(2).toInt,0,args(3).toInt,target)
       val endTimeMillis = System.currentTimeMillis()
       val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
-      println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
-  ```     
-We used binary search in command line to estimate width on a smaller data set first. The smallest width that we can achieve 95 successes is 600. Then we run this algorithm through the entire data set to see if the success is around 95 times. And it works. 
+      println("BJKST Algorithm. Min Bucket Size:"+ min_bucket + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds)
+   
+   ```  
+
+The minimum number of barkets from `binary_BJKST` is 593.  
 #### Result
 For each BJKST runs: 
 Platform |Width|Depth| Time |  Estimation 
 ---------|-----|-----|------|------------
-Local| 600 |5 | 13 | 7340032
-GCP | 600 | 5 | 34 | 7798784
+Local| 593 |5 | 13 | 7340032
+GCP | 593 | 5 | 34 | 7798784
 ### 4. Comparing the Results
 These results are comparing the local run time and result. 
 #### Exact F2 v Tug-of-War Sketch
