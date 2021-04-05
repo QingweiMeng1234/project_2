@@ -151,17 +151,18 @@ Platform |Width|Depth| Time |  Estimation
 Local| 600 |5 | 13 | 7340032
 GCP | 50 | 5 | 66 | 7406649
 ### 4. Comparing the Results
+These results are comparing the local run time and result. 
 #### Exact F2 v Tug-of-War Sketch
  algorithm| time |  estimation 
 ------------|------------|------------
 F2 | 41 | 8567966130
-(serial)Tug-of-War | 276 | 6838827645
+(serial)Tug-of-War | 275 | 7109545222
 (parallel)Tug-of-War | 38 | 8551644765 
 #### Exact F0 v BJKST Sketch
  algorithm| Time |  Estimation 
 ------------|------------|------------
 F0 | 66 | 7406649
-BJKST | 59 | 7340032
+BJKST | 13 | 7340032
 
 #### Summary
 1. `BJKST` and `Tug-of-War` algorithms can estimate F0 and F2 well.
