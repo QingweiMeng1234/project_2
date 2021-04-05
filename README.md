@@ -123,7 +123,7 @@ class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: In
   }
   ``` 
 #### Smallest Width Determination 
-If the estimate of `BJKST` is between +/- 20% of `exact_F2` , we count it as a success. We set the failure probability equals 5 percent and `depth` equals 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the BJKST algorithm in `main`as following: 
+If the estimate of `BJKST` is between +/- 20% of `exact_F0` , we count it as a success. We set the failure probability equals 5 percent and `depth` equals 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the BJKST algorithm in `main`as following: 
   ```
     if(args(1)=="BJKST") {
       if (args.length != 5) {
