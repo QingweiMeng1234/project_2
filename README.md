@@ -27,7 +27,7 @@ def exact_F2(x: RDD[String]) : Long = {
 #### Result
 Platform | Time |  Estimation 
 ------------|------------|------------
-Local | 0 | 16904
+Local | 39 | 8567966130
 GCP | 74 | 8567966130
 ### 2. `Tug_of_War` Implementation.
 This is a serial implementation.
