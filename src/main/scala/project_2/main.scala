@@ -155,7 +155,21 @@ def t_o_w(x: RDD[String]): Long = {
   return n*n
 }
 
+/*****collabors: Jien Li and Xinyu Yao:  more effective tug of war using parallel computing */
+/*  
+ def Tug_of_War(x: RDD[String], width: Int, depth:Int) : Long = {
+    val h = Seq.fill(depth, width){new four_universal_Radamacher_hash_function()} // fill with hash func
 
+//parallelize each hashing event
+ def param0 = (mx: Seq[Seq[Long]], s: String) => Seq.range(0,depth).map( w => Seq.range(0,width).map(d => mx(w)(d) + h(w)(d).hash(s)))
+// add row sum (width)
+ def param1 = (mx1: Seq[Seq[Long]], mx2: Seq[Seq[Long]]) => Seq.range(0,depth).map( w => Seq.range(0,width).map(d => mx1(w)(d) + mx2(w)(d)))
+
+var x3 = x.aggregate(Seq.fill(depth)(Seq.fill(width)(0.toLong)))(param0, param1).map(mxs => mxs.map(sum => sum * sum)) 
+val ans = x3.map(sums => sums.reduce(_+_)/width).sortWith(_<_)(depth/2)
+return ans
+}
+*/
   def exact_F0(x: RDD[String]) : Long = {
     val ans = x.distinct.count
     return ans
