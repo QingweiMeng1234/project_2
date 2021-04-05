@@ -148,7 +148,7 @@ We used binary search in command line to estimate width on a smaller data set fi
 #### Result
 Platform |Width|Depth| Time |  Estimation 
 ---------|-----|-----|------|------------
-Local| 50 |5 | 0 | 9728
+Local| 50 |5 | 13 | 7340032
 GCP | 50 | 5 | 66 | 7406649
 ### 4. Comparing the Results
 #### Exact F2 v Tug-of-War Sketch
