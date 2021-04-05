@@ -2,49 +2,21 @@
 ## Jessica Fong Ng & Qingwei Meng
 Project 2 report of Large Scale Data Processing class at Boston College. The code had been modify from [project 2 assignment description](https://github.com/CSCI3390/project_2).
 
-## Resilient distributed datasets in Spark
-This project will familiarize you with RDD manipulations by implementing some of the sketching algorithms the course has covered thus far.  
-
-You have been provided with the program's skeleton, which consists of 5 functions for computing either F0 or F2: the BJKST, tidemark, tug-of-war, exact F0, and exact F2 algorithms. The tidemark and exact F0 functions are given for your reference.
-
-## Relevant data
-
-You can find the TAR file containing `2014to2017.csv` [here](https://drive.google.com/file/d/1MtCimcVKN6JrK2sLy4GbjeS7E2a-UMA0/view?usp=sharing). Download and expand the TAR file for local processing. For processing in the cloud, refer to the steps for creating a storage bucket in [Project 1](https://github.com/CSCI3390/project_1) and upload `2014to2017.csv`.
-
-`2014to2017.csv` contains the records of parking tickets issued in New York City from 2014 to 2017. You'll see that the data has been cleaned so that only the license plate information remains. Keep in mind that a single car can receive multiple tickets within that period and therefore appear in multiple records.  
-
-**Hint**: while implementing the functions, it may be helpful to copy 100 records or so to a new file and use that file for faster testing.  
-
-## Calculating and reporting your findings
-You'll be submitting a report along with your code that provides commentary on the tasks below.  
-
-1. **(3 points)** Implement the `exact_F2` function. The function accepts an RDD of strings as an input. The output should be exactly `F2 = sum(Fs^2)`, where `Fs` is the number of occurrences of plate `s` and the sum is taken over all plates. This can be achieved in one line using the `map` and `reduceByKey` methods of the RDD class. Run `exact_F2` locally **and** on GCP with 1 driver and 4 machines having 2 x N1 cores. Copy the results to your report. Terminate the program if it runs for longer than 30 minutes.
-2. **(3 points)** Implement the `Tug_of_War` function. The function accepts an RDD of strings, a parameter `width`, and a parameter `depth` as inputs. It should run `width * depth` Tug-of-War sketches, group the outcomes into groups of size `width`, compute the means of each group, and then return the median of the `depth` means in approximating F2. A 4-universal hash function class `four_universal_Radamacher_hash_function`, which generates a hash function from a 4-universal family, has been provided for you. The generated function `hash(s: String)` will hash a string to 1 or -1, each with a probability of 50%. Once you've implemented the function, set `width` to 10 and `depth` to 3. Run `Tug_of_War` locally **and** on GCP with 1 driver and 4 machines having 2 x N1 cores. Copy the results to your report. Terminate the program if it runs for longer than 30 minutes. **Please note** that the algorithm won't be significantly faster than `exact_F2` since the number of different cars is not large enough for the memory to become a bottleneck. Additionally, computing `width * depth` hash values of the license plate strings requires considerable overhead. That being said, executing with `width = 1` and `depth = 1` should generally still be faster.
-3. **(3 points)** Implement the `BJKST` function. The function accepts an RDD of strings, a parameter `width`, and a parameter `trials` as inputs. `width` denotes the maximum bucket size of each sketch. The function should run `trials` sketches and return the median of the estimates of the sketches. A template of the `BJKSTSketch` class is also included in the sample code. You are welcome to finish its methods and apply that class or write your own class from scratch. A 2-universal hash function class `hash_function(numBuckets_in: Long)` has also been provided and will hash a string to an integer in the range `[0, numBuckets_in - 1]`. Once you've implemented the function, determine the smallest `width` required in order to achieve an error of +/- 20% on your estimate. Keeping `width` at that value, set `depth` to 5. Run `BJKST` locally **and** on GCP with 1 driver and 4 machines having 2 x N1 cores. Copy the results to your report. Terminate the program if it runs for longer than 30 minutes.
-4. **(1 point)** Compare the BJKST algorithm to the exact F0 algorithm and the tug-of-war algorithm to the exact F2 algorithm. Summarize your findings.
-## Usage
-1. type `sbt clean package` to build the project's .jar file.
-2. Run the following command
-```
-// Linux
-spark-submit --class project_2.main --master local[*] target/scala-2.12/project_2_2.12-1.0.jar
-
-// Unix
-spark-submit --class "project_2.main" --master "local[*]" target/scala-2.12/project_2_2.12-1.0.jar
-```
-There are 5 functions for computing either F0 or F2: the BJKST, tidemark, tug-of-war, exact F0, and exact F2 algorithms. The input for each are listed as below:
-```
-filename.csv function inputs
-```
-
-## Report Finding
-### Compute Exact F2
+## Report Findings
+We use a local test file with 10000 data.
+### 1. `Exact_F2` Implementation.
 ```
 def exact_F2(x: RDD[String]) : Long = {
     return x.map(x => (x, 1.asInstanceOf[Long])).reduceByKey(_+_).map(a=>a._2*a._2).sum
   }
 ```
-### Implement Tug-of-War Algorithm
+#### Result
+Platform | Time |  Estimation 
+------------|------------|------------
+Local | 0 | 16904
+GCP | 74 | 8567966130
+### 2. `Tug_of_War` Implementation.
+This is a serial implementation.
 ```
  def Tug_of_War(x: RDD[String], width: Int, depth:Int) : Long = {
   val t_o_w_sketches = Seq.fill(width * depth)(t_o_w(x))
@@ -62,14 +34,111 @@ def t_o_w(x: RDD[String]): Long = {
   return n*n
 }
 ```
-### Implement BJKST
+Parallelized implementation ( collabroated with Xinyu Yao and Jien Li)
+#### Result
+Algorithm | Platform |Width|Depth| Time |  Estimation 
+---------|-----|-----|-----|------|------------
+serial| Local| 10 | 3| 275 | 7109545222
+serial| GCP | 10 | 3 | 276 | 6838827645
+parallelize| Local | 10| 3 | 38| 8551644765 
+parallelize| GCP | 10| 3 | x| x 
 
-### Result
+### 3. 
+#### `BJKST` Implementation
+
+```
+class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: Int) extends Serializable {
+/* A constructor that requires initialize the bucket and the z value. The bucket size is the bucket size of the sketch. */
+
+    var bucket: Set[(String, Int)] = bucket_in
+    var z: Int = z_in
+
+    val BJKST_bucket_size = bucket_size_in;
+
+    def this(s: String, z_of_s: Int, bucket_size_in: Int){
+      /* A constructor that allows you pass in a single string, zeroes of the string, and the bucket size to initialize the sketch */
+      this(Set((s, z_of_s )) , z_of_s, bucket_size_in)
+    }
+
+    def +(that: BJKSTSketch): BJKSTSketch = {    /* Merging two sketches */
+      bucket = this.bucket | that.bucket
+      z = math.max(this.z, that.z)
+      while(bucket.size >= this.BJKST_bucket_size){
+        z += 1
+        bucket = bucket.filterNot(s=> s._2 < z)
+      }
+      return this
+    }
+
+
+    def add_string(s: String, z_of_s: Int): BJKSTSketch = {   /* add a string to the sketch */
+      if (z_of_s >= z) {
+         var item = Set((s,z_of_s))
+	bucket = bucket | item
+	
+      while(bucket.size >= this.BJKST_bucket_size){
+		z += 1
+		bucket = bucket.filterNot(s=> s._2 < z)
+	}
+      }
+      return this
+  }
+}
+ 
+
+  def BJKST(x: RDD[String], width: Int, trials: Int) : Double = {
+       val h = Seq.fill(trials)(new hash_function(2000000000))
+
+    def param0 = (a1: Seq[BJKSTSketch], s: String) => Seq.range(0, trials).map(i => a1(i).add_string(s, h(i).zeroes(h(i).hash(s))  )  ) //parallel computing part
+    def param1 = (a1: Seq[BJKSTSketch], a2: Seq[BJKSTSketch]) => Seq.range(0,trials).map(i => (a1(i)) + (a2(i))) //merge bucket
+    val x3 = x.aggregate(Seq.fill(trials)(new BJKSTSketch("dim", 0, width)))( param0, param1)
+     val ans = x3.map(s => scala.math.pow(2, s.z.toDouble)*s.bucket.size.toDouble).sortWith(_ < _)( trials/2) /* Take the median of the trials */
+
+    return ans
+
+  }
+  ``` 
+#### Smallest Width Determination 
+If the estimate of `BJKST` is between +/- 20% of `exact_F2` , we count it as a success. We set the failure probability equals 5 percent and `depth` equals 5. We want the smallest width that has at least 95 successes out of 100 runs. So, we modified the BJKST algorithm in `main`as following: 
+  ```
+    if(args(1)=="BJKST") {
+      if (args.length != 5) {
+        println("Usage: project_2 input_path BJKST #buckets trials number_rounds") /* number_rounds = 100 */
+        sys.exit(1)
+      }
+
+      var count = 0
+      val target = exact_F0(dfrdd)
+      for(i <- 1 to args(4).toInt) {
+        val ans = BJKST(dfrdd, args(2).toInt, args(3).toInt)
+        if (ans < 1.2 * target && ans > 0.8 * target) {
+          count += 1
+        }
+      }
+
+      val endTimeMillis = System.currentTimeMillis()
+      val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
+      println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
+  ```     
+We used binary search in command line to estimate width. The smallest width that we can achieve 95 successes is 50.
+#### Result
+Platform |Width|Depth| Time |  Estimation 
+---------|-----|-----|------|------------
+Local| 50 |5 | 0 | 9728
+GCP | 50 | 5 | 66 | 7406649
+### 4. Comparing the Results
 #### Exact F2 v Tug-of-War Sketch
  algorithm| time |  estimation 
 ------------|------------|------------
 F2 | 41 | 8567966130
 Tug-of-War | 276 | 6838827645
+#### Exact F0 v BJKST Sketch
+ algorithm| Time |  Estimation 
+------------|------------|------------
+F0 | 66 | 7406649
+BJKST | 59 | 7340032
 
-
-The run time is not significantly different becasue the memory bottleneck has not reached. 
+#### Summary
+1. `BJKST` and `Tug-of-War` algorithms can estimate F0 and F2 well.
+2. The running time of `BJKST` is slightly faster than estimating F0 directly, while `Tug-of-War` is much slower than estimating F2 directly.
+  
