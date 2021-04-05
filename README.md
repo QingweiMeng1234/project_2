@@ -38,7 +38,7 @@ Parallelized implementation ( collabroated with Xinyu Yao and Jien Li)
 #### Result
 Algorithm | Platform |Width|Depth| Time |  Estimation 
 ---------|-----|-----|-----|------|------------
-serial| Local| 10 | 3| 2 | 13946
+serial| Local| 10 | 3| 465 | 7109545222
 serial| GCP | 10 | 3 | 276 | 6838827645
 parallelize| Local | 10| 3 | 38| 8551644765 
 parallelize| GCP | 10| 3 | x| 8551644765 
