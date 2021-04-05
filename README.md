@@ -16,6 +16,7 @@ Platform | Time |  Estimation
 Local | 0 | 16904
 GCP | 74 | 8567966130
 ### 2. `Tug_of_War` Implementation.
+This is a serial implementation.
 ```
  def Tug_of_War(x: RDD[String], width: Int, depth:Int) : Long = {
   val t_o_w_sketches = Seq.fill(width * depth)(t_o_w(x))
@@ -33,11 +34,15 @@ def t_o_w(x: RDD[String]): Long = {
   return n*n
 }
 ```
+Parallelized implementation ( collabroated with Xinyu Yao and Jien Li)
 #### Result
-Platform |Width|Depth| Time |  Estimation 
+Algorithm | Platform |Width|Depth| Time |  Estimation 
 ---------|-----|-----|------|------------
-Local| 10 | 3| 2 | 13946
-GCP | 10 | 3 | 276 | 6838827645
+serial| Local| 10 | 3| 2 | 13946
+serial| GCP | 10 | 3 | 276 | 6838827645
+parallelize| Local | 10| 3 | 38| 8551644765 
+parallelize| GCP | 10| 3 | x| 8551644765 
+
 ### 3. 
 #### `BJKST` Implementation
 
