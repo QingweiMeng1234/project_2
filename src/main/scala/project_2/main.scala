@@ -202,6 +202,13 @@ return ans
         println("Usage: project_2 input_path BJKST #buckets trials")
         sys.exit(1)
       }
+      var count = 0
+      val target = exact_F0(dfrdd)
+      for(i <- 1 to args(4).toInt) {
+        val ans = BJKST(dfrdd, args(2).toInt, args(3).toInt)
+        if (ans < 1.2 * target && ans > 0.8 * target) {
+        count += 1
+      }
       val ans = BJKST(dfrdd, args(2).toInt, args(3).toInt)
 
       val endTimeMillis = System.currentTimeMillis()
