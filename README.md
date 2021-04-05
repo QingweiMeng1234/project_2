@@ -7,7 +7,7 @@ This project contains 5 functions for computing either F0 or F2: the BJKST, tide
 
 To run the code:
 1. ```sbt clean package```
-2. You can run any of the function by supplying the `file.csv`, `algorithm`, `inputs`, see examples below:
+2. You can run any of the function by supplying the `file.csv`, `algorithm`, `inputs`, see example below:
 
 ```
 // Linux
