@@ -123,7 +123,7 @@ class BJKSTSketch(bucket_in: Set[(String, Int)] ,  z_in: Int, bucket_size_in: In
   }
   ``` 
 #### Smallest Width Determination 
-According to the slides in class, we started with 600 (24/(0.2)^2). Then we used a binary search to find the minimum buckets and modified the main function and .
+According to the slides in class, we started with 600 (24/(0.2)^2), and it worked. Then we used a binary search with upper bound 600 and lower bound 0 to find the minimum buckets.
   ```
    def binary_BJKST(x: RDD[String], width_up: Int,width_below:Int, trials: Int,target:Long):Int ={
     val result = BJKST(x,(width_up+width_below)/2,trials)
