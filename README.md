@@ -134,17 +134,14 @@ According to the slides in class, we started with 600 (24/(0.2)^2). Then we used
     // if not, increase buckets
     else binary_BJKST(x,width_up,(width_up+width_below)/2, trials,target)
   }
-  ```     
+
+``` 
+
+Within the `main` function in BJKST section, we added:
+
   ```  
-  if(args(1)=="BJKST") {
-      if (args.length != 4) {
-        println("Usage: project_2 input_path BJKST #buckets trials")
-        sys.exit(1)
-      }
       val target = exact_F0(dfrdd)
       val min_bucket = binary_BJKST(dfrdd,args(2).toInt,0,args(3).toInt,target)
-      val endTimeMillis = System.currentTimeMillis()
-      val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
       println("BJKST Algorithm. Min Bucket Size:"+ min_bucket + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds)
    
    ```  
