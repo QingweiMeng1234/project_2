@@ -161,7 +161,7 @@ F2 | 41 | 8567966130
 #### Exact F0 v BJKST Sketch
  algorithm| Time |  Estimation 
 ------------|------------|------------
-F0 | 66 | 7406649
+F0 | 37 | 7406649
 BJKST | 13 | 7340032
 
 #### Summary
