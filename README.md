@@ -144,7 +144,7 @@ If the estimate of `BJKST` is between +/- 20% of `exact_F2` , we count it as a s
       val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
       println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
   ```     
-We used binary search in command line to estimate width. The smallest width that we can achieve 95 successes is 50.
+We used binary search in command line to estimate width on a smaller data set first. The smallest width that we can achieve 95 successes is 50. Then we run this algorithm through the entire data set to see if the success is around 95 times. And it works. 
 #### Result
 Platform |Width|Depth| Time |  Estimation 
 ---------|-----|-----|------|------------
