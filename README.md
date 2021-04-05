@@ -144,12 +144,13 @@ If the estimate of `BJKST` is between +/- 20% of `exact_F0` , we count it as a s
       val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
       println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
   ```     
-We used binary search in command line to estimate width on a smaller data set first. The smallest width that we can achieve 95 successes is 50. Then we run this algorithm through the entire data set to see if the success is around 95 times. And it works. 
+We used binary search in command line to estimate width on a smaller data set first. The smallest width that we can achieve 95 successes is 600. Then we run this algorithm through the entire data set to see if the success is around 95 times. And it works. 
 #### Result
+For each BJKST runs: 
 Platform |Width|Depth| Time |  Estimation 
 ---------|-----|-----|------|------------
 Local| 600 |5 | 13 | 7340032
-GCP | 50 | 5 | 66 | 7406649
+GCP | 600 | 5 | 34 | 7798784
 ### 4. Comparing the Results
 These results are comparing the local run time and result. 
 #### Exact F2 v Tug-of-War Sketch
