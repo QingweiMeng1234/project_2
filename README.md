@@ -2,8 +2,22 @@
 ## Jessica Fong Ng & Qingwei Meng
 Project 2 report of Large Scale Data Processing class at Boston College. The code had been modify from [project 2 assignment description](https://github.com/CSCI3390/project_2).
 
-## Report Findings
-We use a local test file with 10000 data.
+## Project Summary
+This project contains 5 functions for computing either F0 or F2: the BJKST, tidemark, tug-of-war, exact F0, and exact F2 algorithms. The testing file `2014to2017.csv` contains the parking tickets issued in New York City from 2014 to 2017. It can be obtain from [project 2 assignment description](https://github.com/CSCI3390/project_2). 
+
+To run the code:
+1. `sbt clean package'
+2. You can run any of the function by supplying the `file.csv`, `algorithm`, `inputs`, see examples below:
+
+```
+// Linux
+spark-submit --class project_2.main --master local[*] target/scala-2.12/project_2_2.12-1.0.jar filename.csv ToW 5 2
+
+// Unix
+spark-submit --class "project_2.main" --master "local[*]" target/scala-2.12/project_2_2.12-1.0.jar 2014to2017.csv ToW 5 2
+```
+
+## Report Finding
 ### 1. `Exact_F2` Implementation.
 ```
 def exact_F2(x: RDD[String]) : Long = {
