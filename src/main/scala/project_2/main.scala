@@ -202,6 +202,7 @@ return ans
         println("Usage: project_2 input_path BJKST #buckets trials")
         sys.exit(1)
       }
+      /* count# sucess
       var count = 0
       val target = exact_F0(dfrdd)
       for(i <- 1 to args(4).toInt) {
@@ -209,14 +210,20 @@ return ans
         if (ans < 1.2 * target && ans > 0.8 * target) {
         count += 1
       }
+      */
       val ans = BJKST(dfrdd, args(2).toInt, args(3).toInt)
 
       val endTimeMillis = System.currentTimeMillis()
       val durationSeconds = (endTimeMillis - startTimeMillis) / 1000
 
       println("==================================")
-      println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Estimate: "+ans)
+      println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Estimate: "+ans )
+      //println("BJKST Algorithm. Bucket Size:"+ args(2) + ". Trials:" + args(3) +". Time elapsed:" + durationSeconds + "s. Number of successes: "+ count)
       println("==================================")
+	      
+	      
+	      
+	      
     }
     else if(args(1)=="tidemark") {
       if(args.length != 3) {
