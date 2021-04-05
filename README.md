@@ -6,7 +6,7 @@ Project 2 report of Large Scale Data Processing class at Boston College. The cod
 This project contains 5 functions for computing either F0 or F2: the BJKST, tidemark, tug-of-war, exact F0, and exact F2 algorithms. The testing file `2014to2017.csv` contains the parking tickets issued in New York City from 2014 to 2017. It can be obtain from [project 2 assignment description](https://github.com/CSCI3390/project_2). 
 
 To run the code:
-1. `sbt clean package'
+1. ```sbt clean package```
 2. You can run any of the function by supplying the `file.csv`, `algorithm`, `inputs`, see examples below:
 
 ```
